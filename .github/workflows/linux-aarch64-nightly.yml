@@ -148,6 +148,7 @@ jobs:
       - name: Build Tarball (aarch64)
         run: |
           echo "Building tar.gz for aarch64..."
+          npm run tauri build -- --target aarch64-unknown-linux-gnu
           mkdir -p dist/aarch64
           cp src-tauri/target/aarch64-unknown-linux-gnu/release/<binary_name> dist/aarch64/
           cp README.md LICENSE dist/aarch64/
