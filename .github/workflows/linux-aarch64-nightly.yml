@@ -144,7 +144,16 @@ jobs:
           for f in *.rpm; do
             echo "AARCH64_RPM_PATH=src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/rpm/$f" >> $GITHUB_ENV
           done
-          
+
+      - name: Build Tarball (aarch64)
+        run: |
+          echo "Building tar.gz for aarch64..."
+          mkdir -p dist/aarch64
+          cp src-tauri/target/aarch64-unknown-linux-gnu/release/<binary_name> dist/aarch64/
+          cp README.md LICENSE dist/aarch64/
+          tar -czvf NeoHtop_${{ steps.version.outputs.version }}_aarch64.tar.gz -C dist/aarch64 .
+          echo "TAR_GZ_PATH=NeoHtop_${{ steps.version.outputs.version }}_aarch64.tar.gz" >> $GITHUB_ENV
+
       - name: Get version from package.json
         id: version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
@@ -181,3 +190,14 @@ jobs:
           asset_path: ${{ env.AARCH64_RPM_PATH }}
           asset_name: NeoHtop_${{ steps.version.outputs.version }}_aarch64.rpm
           asset_content_type: application/x-rpm
+
+      - name: Upload Tarball to Release
+        if: github.event.inputs.release_upload_url != ''
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        with:
+        upload_url: ${{ github.event.inputs.release_upload_url }}
+        asset_path: ${{ env.TAR_GZ_PATH }}
+        asset_name: NeoHtop_${{ steps.version.outputs.version }}_aarch64.tar.gz
+        asset_content_type: application/gzip
