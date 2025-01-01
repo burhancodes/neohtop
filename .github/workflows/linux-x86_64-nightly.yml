@@ -128,7 +128,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
-        upload_url: ${{ github.event.inputs.release_upload_url }}
-        asset_path: ${{ env.TARBALL_PATH }}
-        asset_name: NeoHtop_${{ steps.version.outputs.version }}_x86_64.tar.gz
-        asset_content_type: application/gzip
+          upload_url: ${{ github.event.inputs.release_upload_url }}
+          asset_path: ${{ env.TARBALL_PATH }}
+          asset_name: NeoHtop_${{ steps.version.outputs.version }}_x86_64.tar.gz
+          asset_content_type: application/gzip
